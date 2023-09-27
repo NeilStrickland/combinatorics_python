@@ -1,2 +1,2 @@
-# combinatorics_python
-This repository contains Python code that is relevant for the MAS334 Combinatorics module at the Uinversity of Sheffield
+# Python for combinatorics
+This repository contains Python code that is relevant for the [MAS334 Combinatorics](https://strickland1.org/courses/MAS334) module at the University of Sheffield.  Most of the code was originally written in Maple and/or Javascript.  I am in the process of translating it into Python, because that is the primary language that we teach to undergraduates in Sheffield.  The corresponding Javascript code can be found in the [combinatorics diagrams](https://github.com/NeilStrickland/combinatorics_diagrams) repository.
