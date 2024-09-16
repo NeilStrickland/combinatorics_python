@@ -5,6 +5,10 @@ import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon, Circle, PathPatch, Path
 
 def prime_root(n):
+    """
+    If n = p ** k for a prime p and an integer k > 0, then prime_root(n) returns p
+    If n is not of this form, then prime_root(n) returns None
+    """
     if not(isinstance(n, int) and n > 0):
         raise ValueError("n must be an integer greater than 0")
     factors = primes.factors(n)
@@ -15,11 +19,18 @@ def prime_root(n):
     return factors[0]
 
 def dp(u,v):
+    """
+    If u and v are lists of the same length, then dp(u,v) returns the dot product of u and v
+    """
     if len(u) != len(v):
         raise ValueError("u and v must be of the same length")
     return sum([x*y for x,y in zip(u,v)])
 
 def random_element_of(X):
+    """
+    If X is a list or a set, then random_element_of(X) returns a random element of X
+    If X is a positive integer, then random_element_of(X) returns a random integer between 1 and X
+    """
     if isinstance(X,int):
         return random.randint(1,X)
     if isinstance(X,set):
@@ -29,6 +40,13 @@ def random_element_of(X):
     return random.choice(X)
 
 def random_subset_of(X,n=False):
+    """
+    Returns a random subset of X of size n
+    If n is not specified, then the size of the subset is chosen randomly
+    (This means that very large and very small subsets are more likely to be chosen
+    than would be the case if we chose the subset uniformly at random.)
+    If X is an integer, then it is interpreted as the set {1,2,...,X}
+    """
     if isinstance(X,int):
         X = list(range(1,X+1))
     if isinstance(X,set):

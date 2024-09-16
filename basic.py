@@ -1,70 +1,92 @@
-def interval_oo(a,b):
-    """Elements of the interval (a,b) """
-    return list(range(a+1,b))
+import matplotlib.pyplot as plt
+from primePy import primes
+import random
 
-def interval_oc(a,b):
-    """Elements of the interval (a,b] """
-    return list(range(a+1,b+1))
-
-def interval_co(a,b):
-    """Elements of the interval [a,b) """
-    return list(range(a,b))
-
-def interval_cc(a,b):
-    """Elements of the interval [a,b] """
-    return list(range(a,b+1))
-
-def BB(n,size = None):
+def get_ax(ax = None):
     """
-    Binary sequences of length n.  If size is specified, only sequences with
-    that number of ones are returned.
+    If ax is None, then get_ax returns a new figure and axis.
+    If ax is a matplotlib axis, then get_ax returns ax.
     """
-    if size == None:
-        B = [[]]
-        for _ in range(n):
-            B = [b+[x] for b in B for x in range(2)]
-        return B
+    if ax == None:
+        fig, ax = plt.subplots()
+    return ax
+
+def prime_root(n):
+    """
+    If n = p ** k for a prime p and an integer k > 0, then prime_root(n) returns p
+    If n is not of this form, then prime_root(n) returns None
+    """
+    if not(isinstance(n, int) and n > 0):
+        raise ValueError("n must be an integer greater than 0")
+    factors = primes.factors(n)
+    if len(factors) == 0:
+        return None
+    if factors[:-1] != factors[1:]:
+        return None
+    return factors[0]
+
+def dp(u,v):
+    """
+    If u and v are lists of the same length, then dp(u,v) returns the dot product of u and v
+    """
+    if len(u) != len(v):
+        raise ValueError("u and v must be of the same length")
+    return sum([x*y for x,y in zip(u,v)])
+
+def random_element_of(X):
+    """
+    If X is a list or a set, then random_element_of(X) returns a random element of X
+    If X is a positive integer, then random_element_of(X) returns a random integer between 1 and X
+    """
+    if isinstance(X,int):
+        return random.randint(1,X)
+    if isinstance(X,set):
+        X = list(X)
+    if not isinstance(X,list):
+        raise ValueError("X must be an integer, a set or a list")
+    return random.choice(X)
+
+def random_subset_of(X,n=False):
+    """
+    Returns a random subset of X of size n
+    If n is not specified, then the size of the subset is chosen randomly
+    (This means that very large and very small subsets are more likely to be chosen
+    than would be the case if we chose the subset uniformly at random.)
+    If X is an integer, then it is interpreted as the set {1,2,...,X}
+    """
+    if isinstance(X,int):
+        X = list(range(1,X+1))
+    if isinstance(X,set):
+        X = list(X)
+    if not isinstance(X,list):
+        raise ValueError("X must be an integer, a set or a list")
+    if n == False:
+        n = random.randint(0,len(X))
+    if n > len(X):
+        raise ValueError("n must be less than or equal to the size of X")
+    return set(random.sample(X,n))
+
+def to_list(x):
+    """
+    Convert x to a list.  If x is a nonnegative integer, then to_list(x) returns
+    the list [1,2,...,x].  Otherwise, to_list(x) uses the built in list() function,
+    which converts most list-like things (such as sets, tuples or numpy arrays) 
+    to lists.
+    """
+    if isinstance(x,int) and x >= 0:
+        return list(range(1, x+1))
     else:
-        if size == 0:
-            return [[0 for _ in range(n)]]
-        elif n == 0:
-            return []
-        else:
-            return [[0]+b for b in BB(n-1,size)] + [[1]+b for b in BB(n-1,size-1)]
+        return list(x)
 
-def PP(A,size = None):
+def to_set(x):
     """
-    Subsets of A (which should be a set or list).  If size is specified, only subsets
-    of that size are returned.
+    Convert x to a set.  If x is a nonnegative integer, then to_set(x) returns
+    the set {1,2,...,x}.  Otherwise, to_set(x) uses the built in set() function,
+    which converts most set-like things (such as lists, tuples or numpy arrays) 
+    to sets.
     """
-    A = sorted(list(A))
-    n = len(A)
-    if size is None:
-        P = [set()]
-        A.reverse()
-        for a in A:
-            P.extend([p.union({a}) for p in P])
-        return P
-    if size == 0:
-        return [[]]
-    L = [[j] for j in range(n-size+1)]
-    for i in range(size-1):
-        L = [l+[j] for l in L for j in range(l[i]+1,n-size+i+2)]
-    return [{A[j] for j in l} for l in L]
+    if isinstance(x,int) and x >= 0:
+        return set(range(1, x+1))
+    else:
+        return set(x)
 
-
-def FF(A,size = None):
-    """
-    Lists of distinct elements of A (which should be a set or list).
-    If size is specified, then lists of that size are returned.  If
-    size is not specified, then lists of length equal to the size of A
-    are returned: each such least must contain every element of A
-    precisely once.
-    """
-    A = sorted(list(A))
-    if size == None:
-        size = len(A)
-    L = [[]]    
-    for i in range(size):
-        L = [l+[a] for l in L for a in A if a not in l]
-    return L

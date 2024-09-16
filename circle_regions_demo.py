@@ -90,45 +90,67 @@ class circle_regions_demo:
                             PathPatch(Path([(0.95,0.00),(1.05,0.00)]),color='black')]
 
         self.outer_point_plot = {}
+        self.outer_point_grey_plot = {}
         for i in range(self.n): 
-            self.outer_point_plot[i] = Circle(self.outer_point[i],radius=self.rc,color='red')
+            self.outer_point_plot[i] = Circle(self.outer_point[i],radius=self.rc,color='red',zorder=3)
+            self.outer_point_grey_plot[i] = Circle(self.outer_point[i],radius=self.rc,color='slategrey',zorder=3)
+        self.outer_point_plot_list = list(self.outer_point_plot.values())
+        self.outer_point_grey_plot_list = list(self.outer_point_grey_plot.values())
 
         self.line_plot = {}
+        self.line_grey_plot = {}
         for i in range(self.n-1):
             for j in range(i+1,self.n):
                 self.line_plot[i,j] = PathPatch(Path([self.outer_point[i],self.outer_point[j]]),color="blue")
+                self.line_grey_plot[i,j] = PathPatch(Path([self.outer_point[i],self.outer_point[j]]),color="slategrey")
+        self.line_plot_list = list(self.line_plot.values())
+        self.line_grey_plot_list = list(self.line_grey_plot.values())
 
         self.crossing_plot = {}
-        self.corners_plot = {}
+        self.corner_plot = {}
+        self.crossing_grey_plot = {}
+        self.corner_grey_plot = {}
 
         for i in range(self.n-3):
             for j in range(i+1,self.n-2):
                 for k in range(j+1,self.n-1):
                     for l in range (k+1,self.n):
                         v = self.crossing[i,j,k,l]
-                        self.crossing_plot[i,j,k,l] = Circle(v,radius=self.rc,color='magenta')
+                        self.crossing_plot[i,j,k,l] = Circle(v,radius=self.rc,color='magenta',zorder=3)
+                        self.crossing_grey_plot[i,j,k,l] = Circle(v,radius=self.rc,color='slategrey',zorder=3)
                         p = [v]
                         p.extend([u[0] for u in self.corners[i,j,k,l]])
-                        self.corners_plot[i,j,k,l] = Polygon(p,color='yellow')
+                        self.corner_plot[i,j,k,l] = Polygon(p,color='yellow')
+                        self.corner_grey_plot[i,j,k,l] = Polygon(p,color='slategrey')
 
-        self.outer_points_plot = [Circle(u,radius=self.rc,color='slategrey') for u in self.outer_point]
-        self.crossings_plot = [Circle(self.crossing[ijkl],radius=self.rc,color='slategrey') for ijkl in self.S4]
-        self.lines_plot = [PathPatch(Path([self.outer_point[i],self.outer_point[j]]),color='slategrey') 
-                           for i in range(self.n-1) for j in range(i+1,self.n)]
-        self.all_corners_plot = [self.corners_plot[S] for S in self.S4]
+        self.crossing_plot_list = list(self.crossing_plot.values())
+        self.crossing_grey_plot_list = list(self.crossing_grey_plot.values())
+        self.corner_plot_list = list(self.corner_plot.values())
+        self.corner_grey_plot_list = list(self.corner_grey_plot.values())
 
         F = []
         F.extend(self.circle_plot)
-        F.extend(self.outer_points_plot)
-        F.extend(self.crossings_plot)
-        F.extend(self.lines_plot)
+        F.extend(self.outer_point_plot_list)
+        F.extend(self.crossing_plot_list)
+        F.extend(self.line_plot_list)
         self.full_plot = F
 
-    def show_full_plot(self):
-        fig, ax = plt.subplots(figsize=(10,10))
-        ax.set_xlim(-1.1,1.1)
-        ax.set_ylim(-1.1,1.1)
-        ax.set_axis_off()
-        self.make_plots()
-        for p in self.full_plot:
+    def show_bare_plot(self, ax=None):
+        if ax is None:
+            fig, ax = plt.subplots(figsize=(10,10))
+            ax.set_xlim(-1.1,1.1)
+            ax.set_ylim(-1.1,1.1)
+            ax.set_axis_off()
+        return ax
+    
+    def add_patches(self, ax, patches):
+        for p in patches:
             ax.add_patch(p)
+        return ax
+
+    def show_full_plot(self, ax = None):
+        if ax is None:
+            ax = self.show_bare_plot()
+        self.make_plots()
+        self.add_patches(ax, self.full_plot)
+        return ax
