@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.patches import Polygon, Circle, PathPatch, Path
 
-class circle_regions_demo:
+class CircleRegionsDemo:
     '''A demonstration of the number of regions created by drawing lines between n points on a circle'''
     rc = 0.02
 
