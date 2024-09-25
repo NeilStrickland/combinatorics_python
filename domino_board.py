@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle, Circle, PathPatch, Path, FancyBboxPatch
 
-class domino_board:
+class DominoBoard:
     def __init__(self,S,complement=False):
         if isinstance(S,int):
             n = S
