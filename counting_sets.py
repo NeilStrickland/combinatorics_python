@@ -153,7 +153,7 @@ def count_distinct_seqs(A,size = None):
     Lists of distinct elements of A (which should be a set or list).
     If size is specified, then lists of that size are returned.  If
     size is not specified, then lists of length equal to the size of A
-    are returned: each such least must contain every element of A
+    are returned: each such list must contain every element of A
     precisely once.
     """
     if isinstance(A,int) and A >= 0:
